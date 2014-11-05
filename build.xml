@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="graniteplugin" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  <target name="GetGraniteAPI">
+  <get src="http://ci.flaten.it/job/Granite/lastSuccessfulBuild/artifact/*zip*/archive.zip" dest="libs/granite-build.zip"/>
+  <unzip src="libs/granite-build.zip" dest="libs"/>
+    <move todir="libs">
+      <fileset dir="libs/archive/GraniteAPI/target">
+        <include name="**/*.jar"/>
+      </fileset>
+      <firstmatchmapper>
+        <globmapper from="*-javadoc.jar" to="GraniteAPI-javadoc.jar"/>
+        <globmapper from="*.jar" to="GraniteAPI.jar"/>
+      </firstmatchmapper>
+    </move>
+    <delete dir="libs/archive"/>
+    <delete file="libs/granite-build.zip"/>
+  </target>
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.ear"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.swc"/>
+    <include name="*.ane"/>
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.graniteapi-v0.1.1-snapshot+b142.classpath">
+    <pathelement location="${basedir}/libs/GraniteAPI-v0.1.1-SNAPSHOT+b142.jar"/>
+  </path>
+  
+  <path id="library.graniteapi-v0.1.1-snapshot+b146.classpath">
+    <pathelement location="${basedir}/libs/GraniteAPI-v0.1.1-SNAPSHOT+b146.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module GranitePlugin -->
+  
+  <dirname property="module.graniteplugin.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.graniteplugin" value="-encoding UTF-8 -source 1.7 ${compiler.args}"/>
+  
+  <property name="graniteplugin.output.dir" value="${module.graniteplugin.basedir}/out/production/GranitePlugin"/>
+  <property name="graniteplugin.testoutput.dir" value="${module.graniteplugin.basedir}/out/test/GranitePlugin"/>
+  
+  <path id="graniteplugin.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="graniteplugin.module.production.classpath">
+    <path refid="library.graniteapi-v0.1.1-snapshot+b142.classpath"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b146.classpath"/>
+  </path>
+  
+  <path id="graniteplugin.runtime.production.module.classpath">
+    <pathelement location="${graniteplugin.output.dir}"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b142.classpath"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b146.classpath"/>
+  </path>
+  
+  <path id="graniteplugin.module.classpath">
+    <pathelement location="${graniteplugin.output.dir}"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b142.classpath"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b146.classpath"/>
+  </path>
+  
+  <path id="graniteplugin.runtime.module.classpath">
+    <pathelement location="${graniteplugin.testoutput.dir}"/>
+    <pathelement location="${graniteplugin.output.dir}"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b142.classpath"/>
+    <path refid="library.graniteapi-v0.1.1-snapshot+b146.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.graniteplugin">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.graniteplugin">
+    <patternset refid="excluded.from.module.graniteplugin"/>
+  </patternset>
+  
+  <path id="graniteplugin.module.sourcepath">
+    <dirset dir="${module.graniteplugin.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.graniteplugin" depends="compile.module.graniteplugin.production,compile.module.graniteplugin.tests" description="Compile module GranitePlugin"/>
+  
+  <target name="compile.module.graniteplugin.production" description="Compile module GranitePlugin; production classes">
+    <mkdir dir="${graniteplugin.output.dir}"/>
+    <javac destdir="${graniteplugin.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.graniteplugin}"/>
+      <bootclasspath refid="graniteplugin.module.bootclasspath"/>
+      <classpath refid="graniteplugin.module.production.classpath"/>
+      <src refid="graniteplugin.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.graniteplugin"/>
+    </javac>
+    
+    <copy todir="${graniteplugin.output.dir}">
+      <fileset dir="${module.graniteplugin.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.graniteplugin.tests" depends="compile.module.graniteplugin.production" description="compile module GranitePlugin; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.graniteplugin" description="cleanup module">
+    <delete dir="${graniteplugin.output.dir}"/>
+    <delete dir="${graniteplugin.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.graniteplugin" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.graniteplugin" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.graniteplugin:jar" value="${basedir}/../../GraniteServer/plugins"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.GranitePlugin.jar" value="${artifacts.temp.dir}/GranitePlugin.jar"/>
+  </target>
+  
+  <target name="artifact.graniteplugin:jar" depends="init.artifacts, compile.module.graniteplugin" description="Build &#39;GranitePlugin:jar&#39; artifact">
+    <property name="artifact.temp.output.graniteplugin:jar" value="${artifacts.temp.dir}/GranitePlugin_jar"/>
+    <mkdir dir="${artifact.temp.output.graniteplugin:jar}"/>
+    <jar destfile="${temp.jar.path.GranitePlugin.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${graniteplugin.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.GranitePlugin.jar}" tofile="${artifact.temp.output.graniteplugin:jar}/GranitePlugin.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.graniteplugin:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.graniteplugin:jar}"/>
+    <copy todir="${artifact.output.graniteplugin:jar}">
+      <fileset dir="${artifact.temp.output.graniteplugin:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
