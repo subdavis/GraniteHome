@@ -64,6 +64,8 @@ public class HomeCommand {
         }else{
 
             try {
+
+                f.getParentFile().mkdirs();
                 f.createNewFile();
                 homes = new HashMap<UUID, SerializableLocation>();
                 FileOutputStream fout = new FileOutputStream(f);

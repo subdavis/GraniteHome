@@ -20,12 +20,12 @@ public class HomePlugin {
         plugin.registerCommandHandler(new HomeCommand());
         //plugin.registerEventHandler(this);
 
-        HomeCommand.checkConfig();
+
     }
 
     @OnEnable
     public void onEnable(PluginContainer p){
-
+        HomeCommand.checkConfig();
     }
 
     public static String formatInfo(String message){
